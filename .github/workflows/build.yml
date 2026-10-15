@@ -1,0 +1,32 @@
+name: Build NoSandbox dylib
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Theos
+        run: |
+          git clone --recursive --depth 1 https://github.com/theos/theos.git "$HOME/theos"
+          echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
+          echo "$HOME/theos/bin" >> "$GITHUB_PATH"
+
+      - name: Build dylib
+        run: |
+          cd NoSandbox
+          make clean && make
+          file .theos/obj/debug/libNoSandbox.dylib
+
+      - name: Upload dylib artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NoSandbox-dylib
+          path: NoSandbox/.theos/obj/debug/libNoSandbox.dylib
+          if-no-files-found: error
