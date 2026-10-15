@@ -29,5 +29,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: NoSandbox-dylib
-          path: '**/*.dylib'
+          path: .theos/obj/debug/NoSandbox.dylib
+          include-hidden-files: true
           if-no-files-found: error
