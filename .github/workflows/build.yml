@@ -22,11 +22,12 @@ jobs:
       - name: Build dylib
         run: |
           make clean && make
-          file .theos/obj/debug/NoSandbox.dylib
+          echo "=== 实际生成的 dylib ==="
+          find . -name "*.dylib" -type f
 
       - name: Upload dylib artifact
         uses: actions/upload-artifact@v4
         with:
           name: NoSandbox-dylib
-          path: .theos/obj/debug/NoSandbox.dylib
+          path: '**/*.dylib'
           if-no-files-found: error
