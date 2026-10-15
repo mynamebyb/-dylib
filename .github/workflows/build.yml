@@ -20,7 +20,6 @@ jobs:
 
       - name: Build dylib
         run: |
-          cd NoSandbox
           make clean && make
           file .theos/obj/debug/libNoSandbox.dylib
 
@@ -28,5 +27,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: NoSandbox-dylib
-          path: NoSandbox/.theos/obj/debug/libNoSandbox.dylib
+          path: .theos/obj/debug/libNoSandbox.dylib
           if-no-files-found: error
