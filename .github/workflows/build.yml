@@ -14,6 +14,7 @@ jobs:
 
       - name: Install Theos
         run: |
+          brew install ldid
           git clone --recursive --depth 1 https://github.com/theos/theos.git "$HOME/theos"
           echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
           echo "$HOME/theos/bin" >> "$GITHUB_PATH"
@@ -21,11 +22,11 @@ jobs:
       - name: Build dylib
         run: |
           make clean && make
-          file .theos/obj/debug/libNoSandbox.dylib
+          file .theos/obj/debug/NoSandbox.dylib
 
       - name: Upload dylib artifact
         uses: actions/upload-artifact@v4
         with:
           name: NoSandbox-dylib
-          path: .theos/obj/debug/libNoSandbox.dylib
+          path: .theos/obj/debug/NoSandbox.dylib
           if-no-files-found: error
