@@ -1,32 +1,14 @@
-name: Build NoSandbox dylib
+ARCHS = arm64
+TARGET := iphone:clang
+SDKVERSION = latest
+IPHONEOS_DEPLOYMENT_TARGET = 13.0
 
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
+include $(THEOS)/makefiles/common.mk
 
-jobs:
-  build:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+LIBRARY_NAME = NoSandbox
+NoSandbox_FILES = src/NoSandbox.xm
+NoSandbox_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
+NoSandbox_FRAMEWORKS = Foundation UIKit StoreKit
+NoSandbox_LDFLAGS = -Wno-unused-dylib
 
-      - name: Install Theos
-        run: |
-          brew install ldid
-          git clone --recursive --depth 1 https://github.com/theos/theos.git "$HOME/theos"
-          echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
-          echo "$HOME/theos/bin" >> "$GITHUB_PATH"
-
-      - name: Build dylib
-        run: |
-          make clean && make
-          file .theos/obj/debug/libNoSandbox.dylib
-
-      - name: Upload dylib artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: NoSandbox-dylib
-          path: .theos/obj/debug/libNoSandbox.dylib
-          if-no-files-found: error
+include $(THEOS_MAKE_PATH)/library.mk
